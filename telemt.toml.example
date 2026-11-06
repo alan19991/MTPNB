@@ -1,0 +1,39 @@
+# 复制为 telemt.toml 后使用。
+# 使用 `openssl rand -hex 16` 生成密钥，并写入 [access.users]。
+# censorship.tls_domain 必须与 traefik/dynamic/tcp.yml 中的 HostSNI 保持一致。
+
+show_link = ["docker"]
+
+[general]
+prefer_ipv6 = false
+fast_mode = true
+use_middle_proxy = true
+ad_tag = "PLACEHOLDER_AD_TAG"
+
+[general.modes]
+classic = false
+secure = false
+tls = true
+
+[server]
+port = 1234
+listen_addr_ipv4 = "0.0.0.0"
+listen_addr_ipv6 = "::"
+
+[censorship]
+tls_domain = "www.microsoft.com"
+mask = true
+mask_port = 443
+fake_cert_len = 2048
+
+[access]
+replay_check_len = 65536
+ignore_time_skew = false
+
+[access.users]
+docker = "__SECRET_HEX_32__"
+
+[[upstreams]]
+type = "direct"
+enabled = true
+weight = 10
