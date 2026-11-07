@@ -25,6 +25,10 @@ escape_sed_replacement() {
 	printf '%s' "$1" | sed -e 's/[\/&]/\\&/g'
 }
 
+has_interactive_terminal() {
+	[[ -r /dev/tty && -w /dev/tty ]]
+}
+
 fetch() {
 	local url="$1"
 	local dest="$2"
@@ -148,10 +152,9 @@ prompt_ad_tag() {
 	if [[ "${AD_TAG_IS_SET}" -eq 1 ]]; then
 		return
 	fi
-	if [[ -t 0 ]]; then
-		echo -n "请输入 ad_tag（可留空）: "
-		read -r input
-		AD_TAG="$input"
+	if has_interactive_terminal; then
+		printf '请输入 ad_tag（可留空）: ' > /dev/tty
+		read -r AD_TAG < /dev/tty || true
 	fi
 }
 
